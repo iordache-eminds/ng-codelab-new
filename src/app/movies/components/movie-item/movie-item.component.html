@@ -1,0 +1,50 @@
+<mat-card class="movie-item"[ngStyle]="{backgroundColor: odd ? 'ghostwhite' : ''}">
+  <mat-card-header>
+    <mat-card-title>
+      {{movie.title}} <span class="movie-year">({{movie.year}})</span>
+    </mat-card-title>
+    <mat-card-subtitle>
+      {{movie.genre}}
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div fxLayout="row" class="details">
+      <div fxFlex="30">
+        <img [src]="movie.poster" ngiMovieImageFallback="assets/noImage2.png">
+      </div>
+      <div fxFlex="70">
+        {{movie.plot}}
+      </div>
+    </div>
+    <div>
+      <div *ngIf="!commentSaved; else commentStatic">
+          <mat-form-field class="comments">
+              <textarea
+                placeholder="Comment"
+                matInput
+                matTextareaAutosize
+                matAutosizeMinRows="1"
+                matAutosizeMaxRows="4"
+                [(ngModel)]="movieComment"
+              ></textarea>
+            </mat-form-field>
+            <p
+            [ngStyle]="{color: movie.comment.trim().length === 0 ? 'firebrick': 'lightseagreen'}">
+            {{movie.comment | wordCount }}
+          </p>
+      </div>
+      <ng-template #commentStatic>
+          <p [hidden]="!commentSaved">{{ movie.comment }}</p>
+      </ng-template>
+      <div>
+          <p><b>Rating:</b></p>
+          <ngi-rating [rating]="movieRating"></ngi-rating>
+        </div>
+      <mat-card-actions>
+        <button mat-raised-button (click)="saveComment(movie.id)" [disabled]="movieComment.trim().length === 0">
+                    {{ commentSaved ? 'Edit ': 'Save '}} comment
+        </button>
+      </mat-card-actions>
+    </div>
+  </mat-card-content>
+</mat-card>
